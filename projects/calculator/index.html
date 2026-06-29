@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🧮 Calculator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #1e1e2e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .calculator {
+      background: #181825;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      width: 320px;
+    }
+    .display {
+      background: #313244;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      text-align: right;
+    }
+    .display .expression {
+      color: #a6adc8;
+      font-size: 14px;
+      min-height: 20px;
+      word-wrap: break-word;
+    }
+    .display .result {
+      color: #cdd6f4;
+      font-size: 36px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    button {
+      padding: 16px;
+      font-size: 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      font-weight: 600;
+    }
+    button:active { transform: scale(0.95); }
+    .number { background: #313244; color: #cdd6f4; }
+    .number:hover { background: #45475a; }
+    .operator { background: #f5c2e7; color: #1e1e2e; }
+    .operator:hover { background: #f8d4ee; }
+    .equals { background: #cba6f7; color: #1e1e2e; }
+    .equals:hover { background: #d8bcf9; }
+    .clear { background: #f38ba8; color: #1e1e2e; }
+    .clear:hover { background: #f5a0b5; }
+    .function { background: #fab387; color: #1e1e2e; }
+    .function:hover { background: #fcc4a0; }
+    .span-2 { grid-column: span 2; }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="display">
+      <div class="expression" id="expression"></div>
+      <div class="result" id="result">0</div>
+    </div>
+    <div class="buttons">
+      <button class="clear span-2" data-action="clear">AC</button>
+      <button class="function" data-action="backspace">⌫</button>
+      <button class="operator" data-action="÷">÷</button>
+
+      <button class="number" data-value="7">7</button>
+      <button class="number" data-value="8">8</button>
+      <button class="number" data-value="9">9</button>
+      <button class="operator" data-action="×">×</button>
+
+      <button class="number" data-value="4">4</button>
+      <button class="number" data-value="5">5</button>
+      <button class="number" data-value="6">6</button>
+      <button class="operator" data-action="-">−</button>
+
+      <button class="number" data-value="1">1</button>
+      <button class="number" data-value="2">2</button>
+      <button class="number" data-value="3">3</button>
+      <button class="operator" data-action="+">+</button>
+
+      <button class="number" data-value="0">0</button>
+      <button class="number" data-value=".">.</button>
+      <button class="equals span-2" data-action="=">=</button>
+    </div>
+  </div>
+
+  <script>
+    // ========== CALCULATOR ENGINE ==========
+    
+    const resultEl = document.getElementById('result');
+    const expressionEl = document.getElementById('expression');
+    
+    let currentInput = '0';
+    let previousInput = '';
+    let operator = null;
+    let shouldResetInput = false;
+    
+    function updateDisplay() {
+      resultEl.textContent = currentInput;
+      
+      if (operator && previousInput) {
+        expressionEl.textContent = `${previousInput} ${operator}`;
+      } else {
+        expressionEl.textContent = '';
+      }
+    }
+    
+    function inputNumber(value) {
+      if (shouldResetInput) {
+        currentInput = value === '.' ? '0.' : value;
+        shouldResetInput = false;
+      } else {
+        if (value === '.' && currentInput.includes('.')) return;
+        if (currentInput === '0' && value !== '.') {
+          currentInput = value;
+        } else {
+          currentInput += value;
+        }
+      }
+      updateDisplay();
+    }
+    
+    function inputOperator(op) {
+      if (operator && !shouldResetInput) {
+        calculate();
+      }
+      previousInput = currentInput;
+      operator = op;
+      shouldResetInput = true;
+      updateDisplay();
+    }
+    
+    function calculate() {
+      if (!operator || !previousInput) return;
+      
+      const prev = parseFloat(previousInput);
+      const current = parseFloat(currentInput);
+      let result;
+      
+      switch (operator) {
+        case '+': result = prev + current; break;
+        case '-': result = prev - current; break;
+        case '×': result = prev * current; break;
+        case '÷':
+          if (current === 0) {
+            result = 'Error';
+          } else {
+            result = prev / current;
+          }
+          break;
+        default: return;
+      }
+      
+      if (typeof result === 'number' && !Number.isInteger(result)) {
+        result = parseFloat(result.toFixed(10));
+      }
+      
+      currentInput = String(result);
+      operator = null;
+      previousInput = '';
+      shouldResetInput = true;
+      updateDisplay();
+    }
+    
+    function clear() {
+      currentInput = '0';
+      previousInput = '';
+      operator = null;
+      shouldResetInput = false;
+      updateDisplay();
+    }
+    
+    function backspace() {
+      if (currentInput.length === 1 || (currentInput.length === 2 && currentInput.startsWith('-'))) {
+        currentInput = '0';
+      } else {
+        currentInput = currentInput.slice(0, -1);
+      }
+      updateDisplay();
+    }
+    
+    // Event delegation — one listener for all buttons!
+    document.querySelector('.buttons').addEventListener('click', (e) => {
+      const button = e.target.closest('button');
+      if (!button) return;
+      
+      const value = button.dataset.value;
+      const action = button.dataset.action;
+      
+      if (value !== undefined) {
+        inputNumber(value);
+      } else if (action === 'clear') {
+        clear();
+      } else if (action === 'backspace') {
+        backspace();
+      } else if (action === '=') {
+        calculate();
+      } else if (['+', '-', '×', '÷'].includes(action)) {
+        inputOperator(action);
+      }
+    });
+    
+    // Keyboard support
+    document.addEventListener('keydown', (e) => {
+      if (e.key >= '0' && e.key <= '9') inputNumber(e.key);
+      if (e.key === '.') inputNumber('.');
+      if (e.key === '+') inputOperator('+');
+      if (e.key === '-') inputOperator('-');
+      if (e.key === '*') inputOperator('×');
+      if (e.key === '/') { e.preventDefault(); inputOperator('÷'); }
+      if (e.key === 'Enter' || e.key === '=') calculate();
+      if (e.key === 'Backspace') backspace();
+      if (e.key === 'Escape') clear();
+    });
+    
+    updateDisplay();
+  </script>
+</body>
+</html>

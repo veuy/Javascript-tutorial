@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Playground - Learn JavaScript</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #1e1e2e;
+      color: #cdd6f4;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: #181825;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #cba6f7;
+      flex-shrink: 0;
+    }
+
+    header h1 {
+      font-size: 20px;
+      color: #cba6f7;
+    }
+
+    header h1 span {
+      color: #89b4fa;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .header-buttons button {
+      background: #313244;
+      border: none;
+      color: #cdd6f4;
+      padding: 6px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .header-buttons button:hover {
+      background: #45475a;
+    }
+
+    #runBtn {
+      background: #a6e3a1;
+      color: #1e1e2e;
+      font-weight: 600;
+    }
+
+    #runBtn:hover {
+      background: #b8f0b4;
+    }
+
+    #clearBtn {
+      background: #f38ba8;
+      color: #1e1e2e;
+    }
+
+    #clearBtn:hover {
+      background: #f5a0b5;
+    }
+
+    main {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .panel-header {
+      background: #313244;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #a6adc8;
+      border-bottom: 1px solid #45475a;
+      flex-shrink: 0;
+    }
+
+    .panel + .panel {
+      border-left: 2px solid #313244;
+    }
+
+    #codeArea {
+      flex: 1;
+      background: #1e1e2e;
+      color: #cdd6f4;
+      border: none;
+      outline: none;
+      padding: 16px;
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      resize: none;
+      tab-size: 2;
+    }
+
+    #codeArea::placeholder {
+      color: #585b70;
+    }
+
+    #outputArea {
+      flex: 1;
+      background: #181825;
+      padding: 16px;
+      overflow-y: auto;
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .output-log {
+      color: #a6adc8;
+    }
+
+    .output-result {
+      color: #89b4fa;
+    }
+
+    .output-error {
+      color: #f38ba8;
+    }
+
+    .output-warn {
+      color: #fab387;
+    }
+
+    .output-info {
+      color: #94e2d5;
+    }
+
+    .output-divider {
+      border-top: 1px dashed #45475a;
+      margin: 8px 0;
+    }
+
+    .lesson-link {
+      color: #89b4fa;
+      text-decoration: none;
+      font-size: 12px;
+      margin-left: 12px;
+    }
+
+    .lesson-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #1e1e2e;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #45475a;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #585b70;
+    }
+
+    @media (max-width: 768px) {
+      main {
+        flex-direction: column;
+      }
+
+      .panel + .panel {
+        border-left: none;
+        border-top: 2px solid #313244;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>💻 <span>JS</span> Playground</h1>
+    <div class="header-buttons">
+      <button id="runBtn">▶ Run</button>
+      <button id="clearBtn">✕ Clear Output</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="panel">
+      <div class="panel-header">
+        📝 Your Code
+        <a href="#" class="lesson-link" id="lessonLink">Open Lessons →</a>
+      </div>
+      <textarea id="codeArea" placeholder="// Write your JavaScript here and click Run!
+// Example:
+let name = "Student";
+console.log("Hello, " + name + "! 👋");
+
+// Try it out!">// ========================================
+//  🚀 Welcome to the JS Playground!
+//  Write any JavaScript below and click Run
+// ========================================
+
+// Try these:
+
+// 1. Variables
+let course = "JavaScript";
+const weeks = 12;
+var topic = "Fundamentals";
+
+// 2. Output to console
+console.log("Welcome to", course);
+console.log("This course is", weeks, "weeks long");
+
+// 3. Simple math
+let a = 10;
+let b = 3;
+console.log(a + " + " + b + " =", a + b);
+console.log(a + " - " + b + " =", a - b);
+console.log(a + " × " + b + " =", a * b);
+console.log(a + " ÷ " + b + " =", a / b);
+console.log(a + " % " + b + " =", a % b);
+
+// 4. Your turn — type anything below!
+</textarea>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">📟 Output</div>
+      <div id="outputArea">Click ▶ Run to see your code in action!</div>
+    </div>
+  </main>
+
+  <script>
+    // ========== PLAYGROUND ENGINE ==========
+
+    const codeArea = document.getElementById('codeArea');
+    const outputArea = document.getElementById('outputArea');
+    const runBtn = document.getElementById('runBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const lessonLink = document.getElementById('lessonLink');
+
+    // Store original console methods
+    const originalConsole = {
+      log: console.log,
+      warn: console.warn,
+      error: console.error,
+      info: console.info,
+      dir: console.dir,
+      table: console.table
+    };
+
+    let outputLines = [];
+
+    function addOutput(text, type = 'log') {
+      const line = document.createElement('div');
+      line.className = `output-${type}`;
+      line.textContent = text;
+      outputArea.appendChild(line);
+      outputLines.push({ text, type });
+      outputArea.scrollTop = outputArea.scrollHeight;
+    }
+
+    function clearOutput() {
+      outputArea.innerHTML = '';
+      outputLines = [];
+    }
+
+    function resetOutput(message) {
+      clearOutput();
+      addOutput(message, 'info');
+    }
+
+    resetOutput('▶ Click "Run" to execute your code!');
+
+    // Override console methods
+    function overrideConsole() {
+      console.log = function(...args) {
+        const text = args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' ');
+        addOutput(text, 'log');
+        originalConsole.log.apply(console, args);
+      };
+
+      console.warn = function(...args) {
+        const text = args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' ');
+        addOutput(text, 'warn');
+        originalConsole.warn.apply(console, args);
+      };
+
+      console.error = function(...args) {
+        const text = args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' ');
+        addOutput(text, 'error');
+        originalConsole.error.apply(console, args);
+      };
+
+      console.info = function(...args) {
+        const text = args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' ');
+        addOutput(text, 'info');
+        originalConsole.info.apply(console, args);
+      };
+
+      console.dir = function(obj) {
+        const text = JSON.stringify(obj, null, 2);
+        addOutput(text, 'info');
+        originalConsole.dir(obj);
+      };
+
+      console.table = function(data) {
+        const text = JSON.stringify(data, null, 2);
+        addOutput(text, 'info');
+        originalConsole.table(data);
+      };
+    }
+
+    function runCode() {
+      clearOutput();
+
+      const code = codeArea.value;
+
+      if (!code.trim()) {
+        addOutput('⚠️ Write some code first!', 'warn');
+        return;
+      }
+
+      // Add a divider showing we ran
+      addOutput(`⏱️ Ran at ${new Date().toLocaleTimeString()}`, 'info');
+      addOutput('─'.repeat(40), 'log');
+      addOutput('', 'log'); // blank line
+
+      overrideConsole();
+
+      try {
+        // Use indirect eval for global scope execution
+        const result = (0, eval)(code);
+
+        // If the code returned a value (not undefined), show it
+        if (result !== undefined) {
+          addOutput('', 'log');
+          addOutput(`↳ Return value:`, 'info');
+          addOutput(typeof result === 'object' ? JSON.stringify(result, null, 2) : String(result), 'result');
+        }
+      } catch (error) {
+        addOutput(`❌ Error: ${error.message}`, 'error');
+        if (error.stack) {
+          const stackLines = error.stack.split('\n').slice(0, 4).join('\n');
+          addOutput(stackLines, 'error');
+        }
+      }
+
+      // Restore original console (will be overridden again on next run)
+      console.log = originalConsole.log;
+      console.warn = originalConsole.warn;
+      console.error = originalConsole.error;
+      console.info = originalConsole.info;
+      console.dir = originalConsole.dir;
+      console.table = originalConsole.table;
+
+      addOutput('', 'log');
+      addOutput('─'.repeat(40), 'log');
+      addOutput('✅ Done!', 'info');
+    }
+
+    runBtn.addEventListener('click', runCode);
+
+    clearBtn.addEventListener('click', () => {
+      clearOutput();
+      addOutput('🧹 Output cleared. Press ▶ Run to try again!', 'info');
+    });
+
+    // Keyboard shortcut: Ctrl+Enter to run
+    codeArea.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        runCode();
+      }
+    });
+
+    // Lesson link — will open the first lesson
+    lessonLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.open('lessons-javascript/01-fundamentals.md', '_blank');
+    });
+
+    // Initial run on load
+    setTimeout(runCode, 300);
+  </script>
+</body>
+</html>
